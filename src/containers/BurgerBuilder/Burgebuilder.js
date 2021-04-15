@@ -2,6 +2,8 @@ import React, { Component } from "react";
 
 import Aux from "../../hoc/Auxilary";
 import Burger from "../../components/Burger/Burger";
+import Modal from "../../components/UI/Modals/Modals";
+import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 const basePrice = {
   salad: 0.5,
@@ -19,11 +21,20 @@ class BurgerBuilder extends Component {
     },
     totalPrice: 4,
     purchaseble: false,
+    purching: false,
   };
 
-  updatePurchaseUpdate(ingredients) {
-  
+  purchaseOnUpdate = () => {
+    this.setState({ purching: true });
+  };
 
+  purchaseOffUpdate = () => {
+    this.setState({ purching: false });
+  };
+  purchaseContinue = () => {
+    alert("You Continue your Purchase");
+  };
+  updatePurchaseUpdate(ingredients) {
     const sum = Object.keys(ingredients)
       .map((ikey) => {
         return ingredients[ikey];
@@ -57,9 +68,9 @@ class BurgerBuilder extends Component {
     const oldPrice = this.state.totalPrice;
     const newPrice = oldPrice - priceAddition;
     this.setState({ totalPrice: newPrice, ingredients: updatedIngredients });
-    this.updatePurchaseUpdate(updatedIngredients );
-
+    this.updatePurchaseUpdate(updatedIngredients);
   };
+
   render() {
     const disableinfo = {
       ...this.state.ingredients,
@@ -71,11 +82,23 @@ class BurgerBuilder extends Component {
 
     return (
       <Aux>
+        <Modal
+          purchase={this.state.purching}
+          purchaseOffUpdate={this.purchaseOffUpdate}
+        >
+          <OrderSummary
+            ingredients={this.state.ingredients}
+            cancel={this.purchaseOffUpdate}
+            price={this.state.totalPrice.toFixed(2)}
+            cont={this.purchaseContinue}
+          />
+        </Modal>
         <Burger ingredients={this.state.ingredients} />
         <BuildControls
           addingredientsHander={this.addedIngredientHandler}
           removeIngredientHandler={this.removeIngredientHandler}
           disabled={disableinfo}
+          purchase={this.purchaseOnUpdate}
           purchaseble={this.state.purchaseble}
           price={this.state.totalPrice.toFixed(2)}
         />
