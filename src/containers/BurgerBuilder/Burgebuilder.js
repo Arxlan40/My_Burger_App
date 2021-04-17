@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import Aux from "../../hoc/Auxilary";
 import Burger from "../../components/Burger/Burger";
-import Modal from "../../components/UI/Modals/Modals";
+import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 const basePrice = {
