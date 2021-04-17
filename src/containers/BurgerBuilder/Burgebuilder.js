@@ -5,6 +5,8 @@ import Burger from "../../components/Burger/Burger";
 import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
+
+import axios from "../../Axios";
 const basePrice = {
   salad: 0.5,
   meat: 1.3,
@@ -31,9 +33,26 @@ class BurgerBuilder extends Component {
   purchaseOffUpdate = () => {
     this.setState({ purching: false });
   };
-  purchaseContinue = () => {
-    alert("You Continue your Purchase");
-  };
+   purchaseContinue = async ()=> {
+    console.log('sss')
+    const data = {
+      ingredients: this.state.ingredients,
+      price: this.state.totalPrice,
+      userdetails: {
+        name: "arslan",
+        address: "nothing",
+        phone: "12342424",
+      },
+    };
+    try {
+      await axios.post("orders.json", data);
+    } catch (e) {
+      console.log('sss')
+
+      console.log(e);
+    }
+
+  }
   updatePurchaseUpdate(ingredients) {
     const sum = Object.keys(ingredients)
       .map((ikey) => {
@@ -83,8 +102,8 @@ class BurgerBuilder extends Component {
     return (
       <Aux>
         <Modal
-          purchase={this.state.purching}
-          purchaseOffUpdate={this.purchaseOffUpdate}
+          show={this.state.purching}
+          modalClosed={this.purchaseOffUpdate}
         >
           <OrderSummary
             ingredients={this.state.ingredients}
