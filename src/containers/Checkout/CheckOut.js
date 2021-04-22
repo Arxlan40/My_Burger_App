@@ -9,7 +9,19 @@ class CheckOut extends Component {
       bacon: 1,
     },
   };
+  componentDidMount() {
+    const query = new URLSearchParams(this.props.location.search);
+    const ingredients = {};
 
+    for (let params of query.entries()) {
+      console.log(params)
+
+      ingredients[params[0]] = +params[1];
+    }
+    console.log("ingredients")
+
+    this.setState({ingredients:ingredients})
+  }
   cancelHander = () => {
     this.props.history.goBack();
   };
@@ -19,10 +31,11 @@ class CheckOut extends Component {
   render() {
     return (
       <div>
-        <CheckoutSummary 
-        continueHander={this.continueHander}
-        cancelHander={this.cancelHander}
-        ingredients={this.state.ingredients} />
+        <CheckoutSummary
+          continueHander={this.continueHander}
+          cancelHander={this.cancelHander}
+          ingredients={this.state.ingredients}
+        />
       </div>
     );
   }

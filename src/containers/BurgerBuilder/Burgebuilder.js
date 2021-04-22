@@ -66,8 +66,21 @@ class BurgerBuilder extends Component {
 
     //   console.log(e);
     // }
+    const queryPrams = [];
+    for (let i in this.state.ingredients) {
+      console.log(i)
+      queryPrams.push(
+        encodeURIComponent(i) +
+          "=" +
+          encodeURIComponent(this.state.ingredients[i])
+      );
+    }
+    const queryString = queryPrams.join("&");
 
-    this.props.history.push("/checkout");
+    this.props.history.push({
+      pathname: "/checkout",
+      search: "?" + queryString,
+    });
   };
   updatePurchaseUpdate(ingredients) {
     const sum = Object.keys(ingredients)
