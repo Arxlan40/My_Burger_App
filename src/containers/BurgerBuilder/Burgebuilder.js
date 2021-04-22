@@ -46,26 +46,28 @@ class BurgerBuilder extends Component {
     this.setState({ purching: false });
   };
   purchaseContinue = async () => {
-    this.setState({ loading: true });
-    console.log("sss");
-    const data = {
-      ingredients: this.state.ingredients,
-      price: this.state.totalPrice,
-      userdetails: {
-        name: "arslan",
-        address: "nothing",
-        phone: "12342424",
-      },
-    };
-    try {
-      await axios.post("orders.json", data);
-      this.setState({ loading: false, purching: false });
-    } catch (e) {
-      console.log("sss");
-      this.setState({ loading: false, purching: false });
+    // this.setState({ loading: true });
+    // console.log("sss");
+    // const data = {
+    //   ingredients: this.state.ingredients,
+    //   price: this.state.totalPrice,
+    //   userdetails: {
+    //     name: "arslan",
+    //     address: "nothing",
+    //     phone: "12342424",
+    //   },
+    // };
+    // try {
+    //   await axios.post("orders.json", data);
+    //   this.setState({ loading: false, purching: false });
+    // } catch (e) {
+    //   console.log("sss");
+    //   this.setState({ loading: false, purching: false });
 
-      console.log(e);
-    }
+    //   console.log(e);
+    // }
+
+    this.props.history.push("/checkout");
   };
   updatePurchaseUpdate(ingredients) {
     const sum = Object.keys(ingredients)
@@ -115,7 +117,7 @@ class BurgerBuilder extends Component {
 
     let orderSum = null;
 
-    let burger = this.state.error ? <p>Error In Network</p> :<Spinner />;
+    let burger = this.state.error ? <p>Error In Network</p> : <Spinner />;
 
     if (this.state.ingredients) {
       burger = (
