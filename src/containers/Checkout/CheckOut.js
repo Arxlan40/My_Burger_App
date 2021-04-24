@@ -29,12 +29,14 @@ class CheckOut extends Component {
   continueHander = () => {
     this.props.history.replace("/checkout/contact-data");
   };
+
+  
   render() {
     return (
       <div>
         <CheckoutSummary
           continueHander={this.continueHander}
-          cancelHander={this.cancelHander}
+          cancelHander={this.cancelHander}   
           ingredients={this.state.ingredients}
         />
         <Route
