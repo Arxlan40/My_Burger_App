@@ -60,10 +60,17 @@ class ContactData extends Component {
 
   orderHandler = (event) => {
     event.preventDefault();
+
     this.setState({ loading: true });
+
+    const formData = {};
+    for (let key in this.state.orderFrom) {
+      formData[key] = this.state.orderFrom[key].value;
+    }
     const order = {
       ingredients: this.props.ingredients,
       price: this.props.price,
+      orderdata: formData,
     };
     axios
       .post("/orders.json", order)
@@ -84,10 +91,10 @@ class ContactData extends Component {
       ...updatedfrom[identifier],
     };
 
-    updatedformelement.value=event.target.value;    
-    
-        updatedfrom[identifier]=updatedformelement;
-    this.setState({orderFrom:updatedfrom})
+    updatedformelement.value = event.target.value;
+
+    updatedfrom[identifier] = updatedformelement;
+    this.setState({ orderFrom: updatedfrom });
   };
 
   render() {
@@ -99,22 +106,19 @@ class ContactData extends Component {
       });
     }
     let form = (
-      <form>
-        {formElmentArray.map((formelement) => (
-          <Input
-            change={(event) => this.changeHandler(event, formelement.id)}
-            key={formelement.id}
-            elementType={formelement.config.elementType}
-            elementConfig={formelement.config.elementConfig}
-            value={formelement.config.value}
-          />
-        ))}
-
-        <Button btnType="Success" clicked={this.orderHandler}>
-          ORDER
-        </Button>
-      </form>
+        <form onSubmit={this.orderHandler}>
+            {formElmentArray.map(formElement => (
+                <Input 
+                    key={formElement.id}
+                    elementType={formElement.config.elementType}
+                    elementConfig={formElement.config.elementConfig}
+                    value={formElement.config.value}
+                    change={(event) => this.changeHandler(event, formElement.id)} />
+            ))}
+            <Button btntype="Success">ORDER</Button>
+        </form>
     );
+
     if (this.state.loading) {
       form = <Spinner />;
     }
@@ -122,7 +126,6 @@ class ContactData extends Component {
       <div className={classes.ContactData}>
         <h4>Enter your Contact Data</h4>
         {form}
-        <button>Order</button>
       </div>
     );
   }
