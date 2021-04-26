@@ -13,7 +13,7 @@ class CheckOut extends Component {
     const ingredients = {};
     let price;
     for (let params of query.entries()) {
-      if (params[0] == "price") {
+      if (params[0] === "price") {
         price = params[1];
       } else {
         ingredients[params[0]] = +params[1];
@@ -21,27 +21,28 @@ class CheckOut extends Component {
     }
     console.log(price);
 
-    this.state ={ ingredients: ingredients, price: price };
+    this.state = { ingredients: ingredients, price: price };
   }
   cancelHander = () => {
     this.props.history.goBack();
   };
   continueHander = () => {
-    this.props.history.replace("/checkout/contact-data");
+    this.props.history.replace("/checkout");
   };
 
-  
   render() {
     return (
       <div>
         <CheckoutSummary
           continueHander={this.continueHander}
-          cancelHander={this.cancelHander}   
+          cancelHander={this.cancelHander}
           ingredients={this.state.ingredients}
         />
         <Route
-          path={this.props.match.path + "/contact-Data"}
-          render={(props) => <ContactData ingredients={this.state.ingredients} {...props}/>}
+          path={this.props.match.path}
+          render={(props) => (
+            <ContactData ingredients={this.state.ingredients} {...props} />
+          )}
         />
       </div>
     );

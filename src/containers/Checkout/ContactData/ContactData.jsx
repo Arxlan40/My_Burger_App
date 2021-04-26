@@ -1,68 +1,131 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import Button from '../../../components/UI/Button/Button';
-import Spinner from '../../../components/UI/Spinner/Spinner';
-import classes from './ContactData.module.css';
-import axios from '../../../Axios';
-
+import Button from "../../../components/UI/Button/Button";
+import Spinner from "../../../components/UI/Spinner/Spinner";
+import classes from "./ContactData.module.css";
+import axios from "../../../Axios";
+import Input from "../../../components/UI/Input/Input";
 class ContactData extends Component {
-    state = {
-        name: '',
-        email: '',
-        address: {
-            street: '',
-            postalCode: ''
+  state = {
+    orderFrom: {
+      name: {
+        elementType: "input",
+        elementConfig: {
+          type: "Text",
+          placeholder: "Your Name",
         },
-        loading: false
-    }
+        value: "",
+      },
 
-    orderHandler = ( event ) => {
-        event.preventDefault();
-        this.setState( { loading: true } );
-        const order = {
-            ingredients: this.props.ingredients,
-            price: this.props.price,
-            customer: {
-                name: 'Max Schwarzmüller',
-                address: {
-                    street: 'Teststreet 1',
-                    zipCode: '41351',
-                    country: 'Germany'
-                },
-                email: 'test@test.com'
-            },
-            deliveryMethod: 'fastest'
-        }
-        axios.post( '/orders.json', order )
-            .then( response => {
-                this.setState( { loading: false } );
-                this.props.history.push('/');
-            } )
-            .catch( error => {
-                this.setState( { loading: false } );
-            } );
-    }
+      street: {
+        elementType: "input",
+        elementConfig: {
+          type: "Text",
+          placeholder: "Your street",
+        },
+        value: "",
+      },
 
-    render () {
-        let form = (
-            <form>
-                <input className={classes.Input} type="text" name="name" placeholder="Your Name" />
-                <input className={classes.Input} type="email" name="email" placeholder="Your Mail" />
-                <input className={classes.Input} type="text" name="street" placeholder="Street" />
-                <input className={classes.Input} type="text" name="postal" placeholder="Postal Code" />
-                <Button btnType="Success" clicked={this.orderHandler}>ORDER</Button>
-            </form>
-        );
-        if ( this.state.loading ) {
-            form = <Spinner />;
-        }
-        return (
-            <div className={classes.ContactData}>
-                <h4>Enter your Contact Data</h4>
-                {form}
-            </div>
-        );
+      country: {
+        elementType: "input",
+        elementConfig: {
+          type: "Text",
+          placeholder: "country",
+        },
+        value: "",
+      },
+
+      email: {
+        elementType: "input",
+        elementConfig: {
+          type: "email",
+          placeholder: "Your Email",
+        },
+        value: "",
+      },
+
+      deliveryMethod: {
+        elementType: "select",
+        elementConfig: {
+          options: [
+            { value: "fastest", displayValue: "fastest" },
+            { value: "fastest", displayValue: "fastest" },
+          ],
+        },
+        value: "",
+      },
+    },
+    loading: false,
+  };
+
+  orderHandler = (event) => {
+    event.preventDefault();
+    this.setState({ loading: true });
+    const order = {
+      ingredients: this.props.ingredients,
+      price: this.props.price,
+    };
+    axios
+      .post("/orders.json", order)
+      .then((response) => {
+        this.setState({ loading: false });
+        this.props.history.push("/");
+      })
+      .catch((error) => {
+        this.setState({ loading: false });
+      });
+  };
+
+  changeHandler = (event, identifier) => {
+    const updatedfrom = {
+      ...this.state.orderFrom,
+    };
+    const updatedformelement = {
+      ...updatedfrom[identifier],
+    };
+
+    updatedformelement.value=event.target.value;    
+    
+        updatedfrom[identifier]=updatedformelement;
+    this.setState({orderFrom:updatedfrom})
+  };
+
+  render() {
+    const formElmentArray = [];
+    for (let key in this.state.orderFrom) {
+      formElmentArray.push({
+        id: key,
+        config: this.state.orderFrom[key],
+      });
     }
+    let form = (
+      <form>
+        {formElmentArray.map((formelement) => (
+          <Input
+            change={(event) => this.changeHandler(event, formelement.id)}
+            key={formelement.id}
+            elementType={formelement.config.elementType}
+            elementConfig={formelement.config.elementConfig}
+            value={formelement.config.value}
+          />
+        ))}
+
+        <Button btnType="Success" clicked={this.orderHandler}>
+          ORDER
+        </Button>
+      </form>
+    );
+    if (this.state.loading) {
+      form = <Spinner />;
+    }
+    return (
+      <div className={classes.ContactData}>
+        <h4>Enter your Contact Data</h4>
+        {form}
+        <button>Order</button>
+      </div>
+    );
+  }
 }
 
 export default ContactData;
